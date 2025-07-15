@@ -1,57 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaDownload, FaGraduationCap, FaBriefcase, FaCode, FaAward } from 'react-icons/fa';
-import resumePDF from '../assets/Vijay Kamble1 Resume.pdf'; 
+import { FaDownload, FaFilePdf } from 'react-icons/fa';
+import resumePDF from '../assets/Vijay Kamble1 Resume.pdf';
 
 const Resume = () => {
-  const resumeData = {
-    name: "Vijay Kamble",
-    title: "Full Stack Developer (MERN)",
-    contact: {
-      email: "vijaykamble3321@gmail.com",
-      phone: "+91 8483022465",
-      location: "Kolhapur, India"
-    },
-    summary: "Motivated computer science graduate with proficiency in web technologies seeking a challenging position to leverage my coding skills, problem-solving abilities, and passion for innovative web development to contribute effectively to a dynamic team",
-    education: [
-      {
-        degree: "Bachelor of Computer Application (BCA)",
-        institution: "Annasaheb Dange College, Hatkanangle",
-        year: "2021 - 2023"
-      },
-      {
-        degree: "Master of Computer Application (MCA)",
-        institution: "Sanjay Ghodawat University",
-        year: "2023 - 2025 ",
-        details: "Current CGPA: 8.5"
-      }
-    ],
-    experience: [
-      {
-        position: "Full Stack Developer (MERN)",
-        company: "Suyotech Solutions, Kollapur",
-        duration: "January 2025 - Present",
-        responsibilities: [
-          "Developing end-to-end web applications using MERN stack technologies",
-          "Designing, implementing, and maintaining scalable APIs",
-          "Creating responsive and user-friendly interfaces",
-          "Collaborating with cross-functional teams",
-          "Utilizing Agile development practices",
-          "Managing version control using Git"
-        ]
-      }
-    ],
-    skills: {
-      technical: ["React.js", "Node.js", "Express.js", "MongoDB", "JavaScript", "HTML/CSS", "Tailwind CSS"],
-      professional: ["Problem Solving", "Team Collaboration", "Time Management", "Communication"]
-    },
-    certifications: [
-      "MERN Stack Certification - Udemy (2022)",
-      "React Developer Certification - Coursera (2021)",
-      "JavaScript Algorithms - freeCodeCamp (2020)"
-    ]
-  };
-
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = resumePDF;
@@ -61,155 +13,140 @@ const Resume = () => {
     document.body.removeChild(link);
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10
+      }
+    }
+  };
+
+  const buttonVariants = {
+    rest: { scale: 1 },
+    hover: { 
+      scale: 1.05,
+      boxShadow: "0px 5px 15px rgba(59, 130, 246, 0.4)",
+      transition: {
+        type: "spring",
+        stiffness: 300
+      }
+    },
+    tap: { scale: 0.95 }
+  };
+
+  const pulseVariants = {
+    pulse: {
+      scale: [1, 1.05, 1],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
+    }
+  };
+
   return (
-    <section id="resume" className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 to-gray-800">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8 sm:mb-12">
+    <section id="resume" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex items-center justify-center">
+      <motion.div 
+        className="max-w-4xl mx-auto w-full"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.div 
+          className="text-center mb-12"
+          variants={itemVariants}
+        >
           <motion.h2 
-            initial={{ opacity: 0, y: -20 }}
+            className="text-4xl sm:text-5xl font-bold text-white mb-4"
+            initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4"
+            transition={{ 
+              type: "spring",
+              stiffness: 100,
+              delay: 0.2
+            }}
           >
-            My <span className="text-blue-400">Resume</span>
+            Download My <span className="text-blue-400">Resume</span>
           </motion.h2>
-          <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto">
-            My professional journey and qualifications
-          </p>
-        </div>
+          <motion.p 
+            className="text-lg text-gray-300 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            Get a copy of my professional resume in PDF format
+          </motion.p>
+        </motion.div>
 
-        <div className="flex justify-center mb-6 sm:mb-8">
+        <motion.div 
+          className="flex flex-col items-center"
+          variants={itemVariants}
+        >
+          <motion.div
+            className="mb-8"
+            variants={pulseVariants}
+            animate="pulse"
+          >
+            <FaFilePdf className="text-6xl text-red-500" />
+          </motion.div>
+
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            variants={buttonVariants}
+            initial="rest"
+            whileHover="hover"
+            whileTap="tap"
             onClick={handleDownload}
-            className="flex items-center px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold shadow-lg text-sm sm:text-base"
+            className="flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 rounded-xl text-white font-bold text-lg shadow-xl relative overflow-hidden group"
           >
-            <FaDownload className="mr-2" />
-            Download Resume (PDF)
+            <motion.span
+              className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"
+            />
+            <FaDownload className="mr-3 text-xl" />
+            Download Resume PDF
+            <motion.span
+              className="absolute bottom-0 left-0 right-0 h-1 bg-blue-300 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+            />
           </motion.button>
-        </div>
 
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-5 sm:p-8 border border-gray-700 shadow-lg">
-          {/* Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">{resumeData.name}</h1>
-            <h2 className="text-lg sm:text-xl text-blue-400 mb-3 sm:mb-4">{resumeData.title}</h2>
-            <div className="flex flex-col items-center space-y-1 sm:space-y-0 sm:flex-row sm:justify-center sm:space-x-4 text-gray-300 mb-4 sm:mb-6 text-sm sm:text-base">
-              <p>{resumeData.contact.email}</p>
-              <p className="hidden sm:block">•</p>
-              <p>{resumeData.contact.phone}</p>
-              <p className="hidden sm:block">•</p>
-              <p>{resumeData.contact.location}</p>
-            </div>
-            <p className="text-gray-300 italic max-w-3xl mx-auto text-sm sm:text-base">
-              {resumeData.summary}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-            {/* Education */}
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-gray-700/50 rounded-lg p-4 sm:p-6"
-            >
-              <div className="flex items-center mb-3 sm:mb-4">
-                <FaGraduationCap className="text-xl sm:text-2xl text-blue-400 mr-2 sm:mr-3" />
-                <h3 className="text-xl sm:text-2xl font-semibold text-white">Education</h3>
-              </div>
-              {resumeData.education.map((edu, index) => (
-                <div key={index} className="mb-4 sm:mb-6 last:mb-0">
-                  <h4 className="text-base sm:text-lg font-medium text-white">{edu.degree}</h4>
-                  <p className="text-gray-400 text-sm sm:text-base">{edu.institution}</p>
-                  <p className="text-blue-400 text-xs sm:text-sm">{edu.year}</p>
-                  {edu.details && <p className="text-gray-300 text-xs sm:text-sm mt-1">{edu.details}</p>}
-                </div>
-              ))}
-            </motion.div>
-
-            {/* Experience */}
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-gray-700/50 rounded-lg p-4 sm:p-6"
-            >
-              <div className="flex items-center mb-3 sm:mb-4">
-                <FaBriefcase className="text-xl sm:text-2xl text-blue-400 mr-2 sm:mr-3" />
-                <h3 className="text-xl sm:text-2xl font-semibold text-white">Experience</h3>
-              </div>
-              {resumeData.experience.map((exp, index) => (
-                <div key={index} className="mb-4 sm:mb-6 last:mb-0">
-                  <h4 className="text-base sm:text-lg font-medium text-white">{exp.position}</h4>
-                  <p className="text-gray-400 text-sm sm:text-base">{exp.company}</p>
-                  <p className="text-blue-400 text-xs sm:text-sm mb-1 sm:mb-2">{exp.duration}</p>
-                  <h5 className="text-white font-medium mb-1 sm:mb-2 text-sm sm:text-base">Key Responsibilities:</h5>
-                  <ul className="list-disc list-inside text-gray-300 space-y-1 text-xs sm:text-sm">
-                    {exp.responsibilities.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Skills */}
-          <motion.div 
+          <motion.p 
+            className="mt-4 text-gray-400 text-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-6 sm:mt-8 bg-gray-700/50 rounded-lg p-4 sm:p-6"
+            transition={{ delay: 1 }}
           >
-            <div className="flex items-center mb-3 sm:mb-4">
-              <FaCode className="text-xl sm:text-2xl text-blue-400 mr-2 sm:mr-3" />
-              <h3 className="text-xl sm:text-2xl font-semibold text-white">Skills</h3>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div>
-                <h4 className="text-base sm:text-lg font-medium text-white mb-1 sm:mb-2">Technical</h4>
-                <div className="flex flex-wrap gap-1 sm:gap-2">
-                  {resumeData.skills.technical.map((skill, index) => (
-                    <span key={index} className="px-2 py-0.5 sm:px-3 sm:py-1 bg-blue-600/20 text-blue-400 rounded-full text-xs sm:text-sm">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h4 className="text-base sm:text-lg font-medium text-white mb-1 sm:mb-2">Professional</h4>
-                <div className="flex flex-wrap gap-1 sm:gap-2">
-                  {resumeData.skills.professional.map((skill, index) => (
-                    <span key={index} className="px-2 py-0.5 sm:px-3 sm:py-1 bg-purple-600/20 text-purple-400 rounded-full text-xs sm:text-sm">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
+            File size: ~2MB • Updated: July 2024
+          </motion.p>
+        </motion.div>
 
-          {/* Certifications */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            className="mt-6 sm:mt-8 bg-gray-700/50 rounded-lg p-4 sm:p-6"
-          >
-            <div className="flex items-center mb-3 sm:mb-4">
-              <FaAward className="text-xl sm:text-2xl text-blue-400 mr-2 sm:mr-3" />
-              <h3 className="text-xl sm:text-2xl font-semibold text-white">Certifications</h3>
-            </div>
-            <ul className="list-disc list-inside text-gray-300 space-y-1 text-xs sm:text-sm">
-              {resumeData.certifications.map((cert, index) => (
-                <li key={index}>{cert}</li>
-              ))}
-            </ul>
-          </motion.div>
-        </div>
-      </div>
+        <motion.div 
+          className="mt-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+        >
+          <p className="text-gray-400 text-sm">
+            Need a different format? <span className="text-blue-400 cursor-pointer">Contact me</span>
+          </p>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

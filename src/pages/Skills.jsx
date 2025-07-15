@@ -14,7 +14,7 @@ import { BsLightningCharge } from 'react-icons/bs';
 
 const Skills = () => {
   // Animation variants
-  const containerVariants = {
+  const container = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -25,8 +25,8 @@ const Skills = () => {
     }
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+  const item = {
+    hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
@@ -35,6 +35,24 @@ const Skills = () => {
         stiffness: 100,
         damping: 10
       }
+    }
+  };
+
+  const cardHover = {
+    y: -10,
+    boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.4)",
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 15
+    }
+  };
+
+  const iconHover = {
+    rotate: [0, 10, -10, 0],
+    scale: 1.1,
+    transition: {
+      duration: 0.5
     }
   };
 
@@ -71,6 +89,8 @@ const Skills = () => {
       title: 'Database & Cloud',
       skills: [
         { name: 'MongoDB', level: 80, icon: <SiMongodb className="text-green-500" /> },
+        { name: 'Firebase', level: 75, icon: <SiFirebase className="text-yellow-500" /> },
+        { name: 'MySQL', level: 70, icon: <SiMysql className="text-blue-500" /> },
       ]
     },
     {
@@ -97,19 +117,20 @@ const Skills = () => {
     <section id="skills" className="py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto">
         <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16"
         >
-          <motion.h2 
-            variants={itemVariants}
-            className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4"
-          >
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">
             My <span className="text-blue-400">Skills</span>
-          </motion.h2>
-          <motion.p 
-            variants={itemVariants}
+          </h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.6 }}
             className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-2"
           >
             Technologies and abilities I've mastered through years of development
@@ -117,43 +138,73 @@ const Skills = () => {
         </motion.div>
 
         <motion.div
+          variants={container}
           initial="hidden"
-          animate="visible"
-          variants={containerVariants}
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {skillCategories.map((category, index) => (
             <motion.div
               key={index}
-              variants={itemVariants}
-              whileHover={{ y: -5 }}
-              className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-5 sm:p-6 border border-gray-700 shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              variants={item}
+              whileHover={cardHover}
+              className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-5 sm:p-6 border border-gray-700 shadow-lg overflow-hidden group relative"
             >
-              <div className="flex items-center mb-4 sm:mb-6">
-                <div className="p-2 sm:p-3 bg-gray-700 rounded-lg mr-3 sm:mr-4">
+              {/* Glow effect */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                <div className="absolute -inset-1  blur-md"></div>
+              </div>
+
+              <div className="flex items-center mb-4 sm:mb-6 relative z-10">
+                <motion.div 
+                  whileHover={iconHover}
+                  className="p-2 sm:p-3 bg-gray-700 rounded-lg mr-3 sm:mr-4"
+                >
                   {category.icon}
-                </div>
-                <h3 className="text-xl sm:text-2xl font-semibold text-white">{category.title}</h3>
+                </motion.div>
+                <motion.h3 
+                  whileHover={{ x: 5 }}
+                  className="text-xl sm:text-2xl font-semibold text-white"
+                >
+                  {category.title}
+                </motion.h3>
               </div>
               
-              <div className="space-y-4 sm:space-y-5">
+              <div className="space-y-4 sm:space-y-5 relative z-10">
                 {category.skills.map((skill, skillIndex) => (
                   <div key={skillIndex}>
-                    <div className="flex items-center justify-between mb-1">
+                    <motion.div 
+                      whileHover={{ x: 5 }}
+                      className="flex items-center justify-between mb-1"
+                    >
                       <div className="flex items-center">
-                        <span className="mr-2 text-sm sm:text-base">{skill.icon}</span>
-                        <span className="text-gray-300 font-medium text-sm sm:text-base">{skill.name}</span>
+                        <motion.span 
+                          whileHover={{ scale: 1.2 }}
+                          className="mr-2 text-sm sm:text-base"
+                        >
+                          {skill.icon}
+                        </motion.span>
+                        <span className="text-gray-300 font-medium text-sm sm:text-base">
+                          {skill.name}
+                        </span>
                       </div>
-                      <span className="text-blue-400 font-medium text-sm sm:text-base">{skill.level}%</span>
-                    </div>
+                      <motion.span 
+                        whileHover={{ scale: 1.1 }}
+                        className="text-blue-400 font-medium text-sm sm:text-base"
+                      >
+                        {skill.level}%
+                      </motion.span>
+                    </motion.div>
                     <div className="w-full bg-gray-700 rounded-full h-2 sm:h-2.5">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${skill.level}%` }}
                         transition={{ 
-                          duration: 1, 
+                          duration: 1.5, 
                           delay: index * 0.1 + skillIndex * 0.05,
-                          type: 'spring'
+                          type: 'spring',
+                          bounce: 0.3
                         }}
                         className="h-2 sm:h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600"
                       />

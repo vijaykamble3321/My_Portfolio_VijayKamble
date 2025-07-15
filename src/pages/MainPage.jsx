@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaHome,
   FaUserTie,
@@ -55,6 +55,42 @@ const MainPage = () => {
     },
   };
 
+  const mobileMenuVariants = {
+    hidden: { 
+      x: "100%",
+      opacity: 0,
+      transition: { duration: 0.3 }
+    },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { 
+        duration: 0.3,
+        ease: "easeOut"
+      }
+    },
+    exit: {
+      x: "100%",
+      opacity: 0,
+      transition: { 
+        duration: 0.2,
+        ease: "easeIn"
+      }
+    }
+  };
+
+  const navItemVariants = {
+    hidden: { x: 20, opacity: 0 },
+    visible: (i) => ({
+      x: 0,
+      opacity: 1,
+      transition: {
+        delay: 0.05 * i,
+        duration: 0.3
+      }
+    })
+  };
+
   useEffect(() => {
     const typingSpeed = isDeleting ? 40 : 120;
     const transitionDelay = isDeleting ? 800 : 1500;
@@ -84,6 +120,7 @@ const MainPage = () => {
     { id: "home", label: "Home", icon: <FaHome /> },
     { id: "skills", label: "Skills", icon: <HiOutlineLightBulb /> },
     { id: "projects", label: "Projects", icon: <FaProjectDiagram /> },
+    { id: "education", label: "Education", icon: <FaUserTie /> },
     { id: "resume", label: "Resume", icon: <FaFileAlt /> },
     { id: "experience", label: "Experience", icon: <FaUserTie /> },
     { id: "sociallink", label: "SocialLinks", icon: <FaLink /> },
@@ -134,15 +171,15 @@ const MainPage = () => {
 
       {/* Mobile Menu Button */}
       <motion.button
-        className="md:hidden fixed top-6 right-6 z-50 p-2 rounded-lg bg-gray-800/50 backdrop-blur-sm border border-gray-700"
+        className="md:hidden fixed top-6 right-6 z-50 p-3 rounded-lg bg-gray-800/80 backdrop-blur-sm border border-gray-700 shadow-lg"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
         {mobileMenuOpen ? (
-          <FaTimes className="text-xl" />
+          <FaTimes className="text-xl text-white" />
         ) : (
-          <FaBars className="text-xl" />
+          <FaBars className="text-xl text-white" />
         )}
       </motion.button>
 
@@ -151,15 +188,11 @@ const MainPage = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 300 }}
-        className={`fixed w-full py-6 px-4 sm:px-6 flex justify-between items-center z-40 bg-gray-900/80 backdrop-blur-sm ${
-          mobileMenuOpen ? "h-screen" : "h-auto"
-        }`}
+        className="fixed w-full py-4 px-4 sm:px-6 flex justify-between items-center z-40 bg-gray-900/80 backdrop-blur-sm border-b border-gray-800"
       >
         <motion.div
           whileHover={{ scale: 1.1 }}
-          className={`font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 ${
-            mobileMenuOpen ? "mb-8" : ""
-          }`}
+          className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
         >
           <FaLaptopCode className="inline mr-2" />
           PORTFOLIO
@@ -187,32 +220,84 @@ const MainPage = () => {
             </motion.button>
           ))}
         </div>
-
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden flex flex-col items-center space-y-4 w-full mt-8">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.id}
-                whileHover={{
-                  scale: 1.02,
-                  color: "#60a5fa",
-                }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full max-w-xs px-4 py-3 rounded-lg font-medium text-lg transition-all flex items-center ${
-                  activeNav === item.id
-                    ? "bg-blue-600 text-white shadow-md"
-                    : "text-gray-300 hover:bg-gray-700/50"
-                }`}
-                onClick={() => handleNavClick(item.id)}
-              >
-                <span className="mr-3">{item.icon}</span>
-                <span>{item.label}</span>
-              </motion.button>
-            ))}
-          </div>
-        )}
       </motion.nav>
+
+      {/* Mobile Navigation - Side Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0  z-40 backdrop-blur-sm"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            
+            {/* Menu Drawer */}
+            <motion.div
+              variants={mobileMenuVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed top-0 right-0 h-full w-80 max-w-full bg-gray-900/95 backdrop-blur-lg z-50 shadow-2xl border-l border-gray-800 overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-8">
+                  <div className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                    <FaLaptopCode className="inline mr-2" />
+                    PORTFOLIO
+                  </div>
+                  <button 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 rounded-full hover:bg-gray-800"
+                  >
+                    <FaTimes className="text-xl text-gray-400" />
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {navItems.map((item, i) => (
+                    <motion.button
+                      key={item.id}
+                      variants={navItemVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                      custom={i}
+                      whileHover={{
+                        x: 5,
+                        backgroundColor: "rgba(59, 130, 246, 0.2)"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`w-full text-left px-4 py-3 rounded-lg font-medium text-lg transition-all flex items-center ${
+                        activeNav === item.id
+                          ? "bg-blue-600/30 text-white border-l-4 border-blue-400"
+                          : "text-gray-300"
+                      }`}
+                      onClick={() => handleNavClick(item.id)}
+                    >
+                      <span className={`mr-3 ${activeNav === item.id ? "text-blue-400" : "text-gray-400"}`}>
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Footer in mobile menu */}
+                <div className="mt-12 pt-6 border-t border-gray-800">
+                  <div className="text-center text-gray-400 text-sm">
+                    <p>© {new Date().getFullYear()} Vijay Kamble</p>
+                    <p className="mt-1">Web Developer Portfolio</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <div className="pt-24">
@@ -317,12 +402,9 @@ const MainPage = () => {
                 alt="Vijay Kamble"
                 className="w-full h-full object-cover rounded-full"
               />
-             
             </motion.div>
           </motion.div>
         </section>
-
-       
       </div>
     </div>
   );

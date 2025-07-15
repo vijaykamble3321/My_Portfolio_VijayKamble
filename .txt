@@ -89,3 +89,11 @@ EmailJS or FormSubmit for contact form
 
 GitHub Pages or Vercel for deployment
 
+
+
+  emailjs.sendForm(
+      'service_0otw43v',
+      'template_ivcvkub',
+      form.current,
+      'yb1dHr8oa0dRreWGc'
+    )
