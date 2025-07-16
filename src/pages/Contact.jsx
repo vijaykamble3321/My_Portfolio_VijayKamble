@@ -25,19 +25,23 @@ const Contact = () => {
     setIsSending(true);
     setError(null);
 
+    // Log form data for debugging
+    const formData = new FormData(form.current);
+    console.log('Form data:', Object.fromEntries(formData));
+
     emailjs.sendForm(
-      'service_0otw43v',
-      'template_ivcvkub',
+      'service_0otw43v', // Your Service ID
+      'template_ivcvkub', // Your Template ID
       form.current,
-      'yb1dHr8oa0dRreWGc'
+      'yb1dHr8oa0dRreWGc' // Your Public Key
     )
     .then((result) => {
-      console.log(result.text);
+      console.log('EmailJS success:', result.text);
       setIsSent(true);
       form.current.reset();
     })
     .catch((error) => {
-      console.error(error.text);
+      console.error('EmailJS error:', error.text);
       setError('Failed to send message. Please try again or email me directly.');
     })
     .finally(() => {
